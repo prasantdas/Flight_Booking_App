@@ -79,11 +79,10 @@ WSGI_APPLICATION = "flightBooking.wsgi.application"
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "flightdb",
+#         "NAME": "flightData",
 #         "USER": "postgres",
-#         "PASSWORD": "1234",
-#         "HOST": "localhost",
-#         'PORT': '5433',  # Or your PostgreSQL port
+#         "PASSWORD": "12345",
+#         "HOST": "localhost"
 #     }
 # }
 
@@ -137,11 +136,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets/")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 django_heroku.settings(locals())
-
-
-# Paytm settings
-PAYTM_MERCHANT_ID = '<your_merchant_id>'
-PAYTM_SECRET_KEY = '<your_paytm_secret_key>'
-PAYTM_WEBSITE = 'WEBSTAGING'
-PAYTM_CHANNEL_ID = 'WEB'
-PAYTM_INDUSTRY_TYPE_ID = 'Retail'
