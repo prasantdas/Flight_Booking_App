@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY ="django-insecure-1)nkv0e5kl%k-1op9f^dly_d7*+chik!g$+72s(qhpkqa&-y$3"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG","false").lower()=="true"
 
 ALLOWED_HOSTS = [*]
 
@@ -68,14 +68,12 @@ TEMPLATES = [
         },
     },
 ]
-app = get_wsgi_application()
-WSGI_APPLICATION = 'api.wsgi.app'
-# WSGI_APPLICATION = "flightBooking.wsgi.application"
+WSGI_APPLICATION = "flightBooking.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+database_url=os.environ.get("postgres://flightdb_2e0m_user:dUpdykpKYUgRHVlOWxrtAvu9JFqbeXa4@dpg-cpdq3gf109ks73elp6cg-a.singapore-postgres.render.com/flightdb_2e0m")
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -87,7 +85,7 @@ WSGI_APPLICATION = 'api.wsgi.app'
 # }
 
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    "default": dj_database_url.parse(os.environ.get(database_url)),
 }
 
 # Password validation
