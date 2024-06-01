@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-1)nkv0e5kl%k-1op9f^dly_d7*+chik!g$+72s(qhpkqa&-y$3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "*"]
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -69,8 +69,9 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = "flightBooking.wsgi.application"
+app = get_wsgi_application()
+WSGI_APPLICATION = 'api.wsgi.app'
+# WSGI_APPLICATION = "flightBooking.wsgi.application"
 
 
 # Database
