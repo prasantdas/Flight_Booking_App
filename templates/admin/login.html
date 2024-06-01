@@ -1,0 +1,26 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+    
+</head>
+
+<body>
+
+    <form method="post" action="{% url 'adminLogin' %}">
+        <h2>Admin Login</h2>
+        {% csrf_token %}
+        <input type="text" name="username" class="text-field" placeholder="Username" />
+        <input type="password" name="password" class="text-field" placeholder="Password" />
+        <input type="submit" value="Login" class="button">
+        <!-- <a href=""><input type="button"   value="Log In" /></a> -->
+        {% if error %}
+        <p>{{ error }}</p>
+        {% endif %}
+    </form>
+
+</body>
+</html>

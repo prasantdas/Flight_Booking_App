@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Flight</title>
+    <link rel="stylesheet" href="{% static 'css/addFlight.css' %}" />
+</head>
+<body>
+    <h1>Add Flight</h1>
+    <form method="post" action="{% url 'addFlight' %}">
+        {% csrf_token %}
+        <label for="flight_name">Flight Name:</label>
+        <input type="text" name="flight_name" required>
+        <br>
+        <label for="flight_number">Flight Number:</label>
+        <input type="text" name="flight_number" required>
+        <br>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required>
+        <br>
+        <label for="seat_count">Seat Count:</label>
+        <input type="number" name="seat_count" required>
+        <br>
+        <label for="from_location">From Location:</label>
+        <input type="text" name="from_location" required>
+        <br>
+        <label for="to_location">To Location:</label>
+        <input type="text" name="to_location" required>
+        <br>
+        <label for="fare">Fare:</label>
+        <input type="text" name="fare" required>
+        <br>
+        <input type="submit" value="Add Flight">
+    </form>
+</body>
+</html>

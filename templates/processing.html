@@ -1,0 +1,144 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Processing</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .home-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+        }
+        .home-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="message" id="message">Payment is processing...</div>
+    <button class="home-button" id="homeButton" onclick="goHome()">Return to Home</button>
+
+    <script>
+        function goHome() {
+            window.location.href = "{% url 'home' %}"; // Change this to your home page URL
+        }
+
+        function showSuccessMessage() {
+            document.getElementById('message').textContent = 'Payment successful!';
+            document.getElementById('homeButton').style.display = 'inline-block';
+        }
+
+        // Set a timeout to show the success message after 5 seconds
+        setTimeout(showSuccessMessage, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Processing</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .message-container {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+        .home-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+        }
+        .home-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="message-container">
+        <div class="message" id="message">Payment is processing...</div>
+        <div class="timer" id="timer">5</div> <!-- Countdown timer -->
+    </div>
+    <button class="home-button" id="homeButton" onclick="goHome()">Return to Home</button>
+
+    <script>
+        function goHome() {
+            window.location.href = "{% url 'home' %}"; // Change this to your home page URL
+        }
+
+        function showSuccessMessage() {
+            document.getElementById('message').textContent = 'Payment successful!';
+            document.getElementById('homeButton').style.display = 'inline-block';
+            document.getElementById('timer').style.display = 'none'; // Hide timer when payment is successful
+        }
+
+        function startCountdown(duration, display) {
+            let timer = duration, seconds;
+            const countdown = setInterval(function () {
+                seconds = parseInt(timer % 60, 10);
+
+                display.textContent = seconds;
+
+                if (--timer < 0) {
+                    clearInterval(countdown);
+                    showSuccessMessage();
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            const fiveSeconds = 5;
+            const display = document.getElementById('timer');
+            startCountdown(fiveSeconds, display);
+        };
+    </script>
+
+</body>
+</html>
+
+

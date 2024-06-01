@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bookings</title>
+    <link rel="stylesheet" href="{% static 'css/viewBookings.css' %}" />
+</head>
+<body>
+    <h1>View Bookings</h1>
+    <form method="post" action="{% url 'viewBookings' %}" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <label for="flight_number">Flight Number:</label>
+        <input type="text" name="flight_number">
+        <br>
+        <label for="flight_name">Flight Name:</label>
+        <input type="text" name="flight_name">
+        <br>
+        <label for="date">Date:</label>
+        <input type="date" name="date">
+        <br>
+        <br>
+        <input type="submit" value="Filter Bookings">
+    </form>
+    
+    <script>
+        function validateForm() {
+            var flightNumber = document.getElementsByName('flight_number')[0].value;
+            var flightName = document.getElementsByName('flight_name')[0].value;
+            var date = document.getElementsByName('date')[0].value;
+    
+            if (!flightNumber && !flightName && !date) {
+                alert("Please fill out at least one field.");
+                return false;  
+            }
+    
+    
+            return true;  
+        }
+    </script>
+
+    {% if bookings %}
+        <h2>Bookings:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Passenger Name</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Flight Name</th>
+                    <th>Flight Number</th>
+                    <th>Booking Date</th>
+                    <!-- Add more headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.user.username }}</td>
+                        <td>{{ booking.passenger_first_name}} {{ booking.passenger_last_name}}</td>
+                        <td>{{ booking.flight.from_location }}</td>
+                        <td>{{ booking.flight.to_location }}</td>
+                        <td>{{ booking.flight.flight_name }}</td>
+                        <td>{{ booking.flight.flight_number }}</td>
+                        <td>{{ booking.booking_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</body>
+</html>

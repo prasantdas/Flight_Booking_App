@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <title>Flight Booking</title>
+    <style>
+        body {
+            background-color: #f2f2f2; /* Fallback background color */
+            background-image: url('../static/assets/light.jpg'); /* Relative or absolute path to your image */
+            background-color: rgba(242, 242, 242,0);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+
+<body>
+<nav>
+  <div class="nav__logo">FlightBooking</div>
+  <div class="nav__mobile-icon" onclick="toggleMobileMenu()">
+      <i class="ri-menu-line"></i>
+  </div>
+  <ul class="nav__links" id="navLinks">
+    {% if user.is_authenticated %}
+        <li class="link"><a href="{% url 'myBookings' %}">My Bookings</a></li>
+        <li class="link"><a href="{% url 'userLogout' %}">Logout</a></li>
+    {% else %}
+        <li class="link"><a href="#" onclick="openModal('loginModal')">Login</a></li>
+        <li class="link"><a href="#" onclick="openModal('signupModal')">Signup</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+<header class="section__container header__container">
+    {% if user.is_authenticated %}
+        <h1 class="section__header">Howdy, {{user.username}} !!!<br/> Find And Book</h1>
+    {% else %}
+        <h1 class="section__header">Find And Book</h1>
+    {% endif %}
+    <section class="section__container booking__container">
+        <form method="post" action="{% url 'flightSearch' %}" id="searchForm" onsubmit="return validateSearchForm()" >
+            {% csrf_token %}
+            <div style = "display: flex; flex-direction : row; justify-content:space-around">
+                <div class="form__group">
+                    <input type="text" name="name" id="flightName" placeholder="Name" />
+                </div>
+                <h3 style = "align-items : center;"> Or </h3>
+                <div class="form__group">
+                    <input type="text" name="number" id="flightNumber" placeholder="Number" />
+                </div>
+                <h3 style = "align-items : center;"> Or </h3>
+                <div class="custom-date-picker">
+                    <input type="text" name="date" id="date" placeholder="Date" />
+                </div>
+            </div>
+            <center><h2 style = "align-items : center;"> Or </h2></center>
+            <div style = "display: flex; flex-direction : row; justify-content:space-around">
+                <div class="form__group">
+                    <input type="text" name="from_location" id="fromLocation" placeholder="From" />
+                </div>
+                <h3 style = "align-items : center;"> And </h3>
+                <div class="form__group">
+                    <input type="text" name="to_location" id="toLocation" placeholder="To" />
+                </div>
+            </div>
+            <button type="submit" class="btn"><i class="ri-search-line"></i> Search</button>
+        </form>
+    </section>
+    
+    <img src="{% static 'assets/header.jpg' %}" alt="header" />
+</header>
+
+
+<div id="loginModal" class="modal">
+<div class="modal-content">
+    <span class="close" onclick="closeModal('loginModal')">&times;</span>
+    <div class="auth-form">
+        <h2>Login</h2>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</div>
+</div>
+
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('signupModal')">&times;</span>
+        <div class="auth-form">
+    </ul>
+            <h2>Signup</h2>
+
+            <form method="post" action="{% url 'signup' %}" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" required>
+                <input type="submit" value="Signup">
+            </form>
+        </div>
+    </div>
+</div>
+{% if messages %}
+    {% for message in messages %}
+            {% if message.tags %}
+            <script> alert('{{ message }}');</script>
+            {% endif %}
+    {% endfor %}
+{% endif %}
+
+    <footer class="footer">
+        <div class="section__container footer__bar">
+            <p>Flight Booking</p>
+            <div class="socials">
+                <span><i class="ri-facebook-fill"></i></span>
+                <span><i class="ri-twitter-fill"></i></span>
+                <span><i class="ri-instagram-line"></i></span>
+                <span><i class="ri-youtube-fill"></i></span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function searchFlights() {
+            var form = document.getElementById('searchForm');
+            form.submit();
+        }
+
+        window.onclick = function (event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        };
+        function toggleMobileMenu() {
+            var navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById('date');
+
+        dateInput.addEventListener('focus', function () {
+            this.type = 'date';
+        });
+
+        dateInput.addEventListener('blur', function () {
+            if (!this.value) {
+                this.type = 'text';
+            }
+        });
+    });
+    function validateSearchForm() {
+        var flightName = document.getElementById('flightName').value;
+        var flightNumber = document.getElementById('flightNumber').value;
+        var date = document.getElementById('date').value;
+        var fromLocation = document.getElementById('fromLocation').value;
+        var toLocation = document.getElementById('toLocation').value;
+
+        if ((!fromLocation && toLocation) || (fromLocation && !toLocation)) {
+            alert("Please provide both 'From' and 'To' locations for a complete search.");
+            return false;
+        }
+
+        if (!flightName && !flightNumber && !date && !fromLocation && !toLocation) {
+            alert("Please fill out at least one field.");
+            return false;
+        }
+
+        if (date) {
+            var currentDate = new Date();
+            var selectedDate = new Date(date);
+            if (selectedDate < currentDate) {
+                alert("Please select a date that is not in the past.");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function showMyBookings() {
+        window.location.href = "{% url 'myBookings' %}";
+    }
+    </script>
+</body>
+</html>

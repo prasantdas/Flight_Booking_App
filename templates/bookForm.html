@@ -1,0 +1,142 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+    <link rel="stylesheet" href="{% static 'css/bookForm.css' %}" />
+    <style>
+        body {
+            background-color: #f2f2f2; /* Fallback background color */
+            background-image: url('../static/assets/light.jpg'); /* Relative or absolute path to your image */
+            background-color: rgba(242, 242, 242,0);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div class="form-container">
+        <div class="header">
+            <h2>Flight Booking</h2>
+            <div class="flight-details">
+                From: {{ flight.from_location }} | To: {{ flight.to_location }} | Date: {{ flight.date }} | Flight Name: {{ flight.flight_name }}
+            </div>
+        </div>
+
+        {% if success %}
+            <p style="color: green;">{{ success }}</p>
+        {% endif %}
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    {% comment %} <form method="post" action="{% url 'bookTicket' flight.flight_number %}"> {% endcomment %}
+    <form method="post" action="{% url 'payment' %}">
+        {% csrf_token %}
+        <input type="hidden" name="total_passengers" id="total_passengers" value="1">
+        <input type="hidden" name="passenger_data" id="passenger_data" value="[]">
+        <input type="hidden" name="flight_number" value="{{data.flight_number}}">
+        <input type="hidden" name="from_location" value="{{data.from_location}}">
+        <input type="hidden" name="to_location" value="{{data.to_location}}">
+        <input type="hidden" name="fare" value="{{data.fare}}">
+        <input type="hidden" name="date" value="{{data.date}}">
+        <div id="passenger-forms">
+            <!-- Initial passenger form -->
+            <div class="passenger-form">
+                <div class="form-header">Passenger 1</div>
+                <div class="passenger-details">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" name="passenger_first_name[0]" required>
+                    
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" name="passenger_last_name[0]" required>
+                    
+                    <label for="age">Age:</label>
+                    <input type="number" name="passe
+                    nger_age[0]" required>
+                </div>
+                <button type="button" class="remove-passenger" style="visibility: hidden;" onclick="removePassengerForm(this)">Remove Passenger</button>
+            </div>
+        </div>
+        <button type="button" onclick="addPassengerForm()">Add Passenger</button>
+        <br>
+        <!-- <button type="submit" onclick="preparePassengerData()" class="book-button">Book Tickets</button> -->
+        
+        <button type="submit" onclick="return confirmBooking()" class="book-button">Book Tickets</button>
+
+    </form>
+</div>
+    <script>
+        let passcount=1;
+        function addPassengerForm() {
+            const passengerForms = document.getElementById('passenger-forms');
+        
+            if (passengerForms.childElementCount < 5) {
+                passcount++;
+                const newForm = document.querySelector('.passenger-form').cloneNode(true);
+        
+                newForm.querySelectorAll('input').forEach(input => input.value = '');
+        
+                newForm.lastElementChild.remove();
+        
+                const passengerNumber = passengerForms.childElementCount + 1;
+                newForm.querySelector('.form-header').textContent = `Passenger ${passengerNumber}`;
+        
+                newForm.querySelectorAll('input').forEach(input => {
+                    const fieldName = input.getAttribute('name').replace('[0]', `[${passengerNumber - 1}]`);
+                    input.setAttribute('name', fieldName);
+                });
+        
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'remove-passenger';
+                removeButton.textContent = 'Remove Passenger';
+                removeButton.onclick = function() {
+                    removePassengerForm(this);
+                };
+                newForm.appendChild(removeButton);
+        
+                newForm.lastElementChild.style.visibility = 'visible';
+        
+                passengerForms.appendChild(newForm);
+                document.getElementById('total_passengers').value = passengerForms.childElementCount;
+            }
+        }
+        
+        function removePassengerForm(button) {
+            const passengerForm = button.parentNode;
+            const passengerForms = document.getElementById('passenger-forms');
+        
+            if (passengerForms.childElementCount > 1) {
+                passcount--;
+                passengerForms.removeChild(passengerForm);
+                document.getElementById('total_passengers').value = passengerForms.childElementCount;
+            }
+        }
+        
+        function preparePassengerData() {
+            const passengerForms = document.getElementById('passenger-forms');
+            const passengerData = [];
+        
+            passengerForms.querySelectorAll('.passenger-form').forEach((form, index) => {
+                const data = {
+                    passenger_first_name: form.querySelector(`input[name="passenger_first_name[${index}]"]`).value,
+                    passenger_last_name: form.querySelector(`input[name="passenger_last_name[${index}]"]`).value,
+                    passenger_age: form.querySelector(`input[name="passenger_age[${index}]"]`).value
+                };
+                passengerData.push(data);
+            });
+        
+            document.getElementById('passenger_data').value = JSON.stringify(passengerData);
+        }
+        function confirmBooking() {
+            preparePassengerData();
+            document.getElementById('total_passengers').value = passcount;
+            return true; // Allow the form submission to proceed
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+</head>
+<body>
+    <h1>Welcome, Admin!</h1>
+    
+    <form method="post" action="{% url 'adminLogout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    <form method="get" action="{% url 'addFlight' %}">
+        <button type="submit">Add Flight</button>
+    </form>
+
+    <form method="get" action="{% url 'viewBookings' %}">
+        <button type="submit">View Bookings</button>
+    </form>
+    <form method="get" action="{% url 'flights' %}">
+        <button type="submit">See Flights</button>
+    </form>
+</body>
+</html>
