@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-1)nkv0e5kl%k-1op9f^dly_d7*+chik!g$+72s(qhpkqa&-y$3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "*"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -72,6 +72,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "flightBooking.wsgi.application"
 
+# postgres://flightdb_2e0m_user:dUpdykpKYUgRHVlOWxrtAvu9JFqbeXa4@dpg-cpdq3gf109ks73elp6cg-a.singapore-postgres.render.com/flightdb_2e0m
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -79,15 +81,16 @@ WSGI_APPLICATION = "flightBooking.wsgi.application"
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "flightData",
-#         "USER": "postgres",
-#         "PASSWORD": "12345",
-#         "HOST": "localhost"
+#         # "NAME": "flightdb",
+#         # "USER": "postgres",
+#         # "PASSWORD": "1234",
+#         # "HOST": "localhost",
+#         # 'PORT': '5433',  # Or your PostgreSQL port
 #     }
 # }
 
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    "default": dj_database_url.parse("postgres://flightdb_2e0m_user:dUpdykpKYUgRHVlOWxrtAvu9JFqbeXa4@dpg-cpdq3gf109ks73elp6cg-a/flightdb_2e0m"),
 }
 
 # Password validation
@@ -136,3 +139,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets/")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 django_heroku.settings(locals())
+
+
+# Paytm settings
+PAYTM_MERCHANT_ID = '<your_merchant_id>'
+PAYTM_SECRET_KEY = '<your_paytm_secret_key>'
+PAYTM_WEBSITE = 'WEBSTAGING'
+PAYTM_CHANNEL_ID = 'WEB'
+PAYTM_INDUSTRY_TYPE_ID = 'Retail'
